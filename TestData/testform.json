@@ -1,0 +1,11 @@
+{   
+    "tenant_Name_exist" : "TestExistingTenant",
+    "Email_exist" : "test_existing@test.com",
+    "Mobile_exist" : "1021523625",
+
+    "tenant_Namein" : "mohamedrrr_unique_tenant",
+    "Person_firstName" : "mohamedrryr",
+    "Person_lastName" : "mohamedrrr",
+    "Email_in" : "mohamed18r8_unique@test.com",
+    "Mobile_in" : "552542588"
+}

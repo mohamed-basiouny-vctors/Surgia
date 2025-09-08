@@ -1,0 +1,1 @@
+The `getByRole` locator for the given element is: `page.getByRole('link', { name: 'Customers' })` 
