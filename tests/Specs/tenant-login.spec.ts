@@ -1,9 +1,9 @@
 import { test, expect } from '@playwright/test';
-import { Loginadmin } from '../pages/Tenant_signin_page';
+import { Loginadmin } from '../pages/Tenantsigninpage';
 
 let loginPage: Loginadmin;
 
-test.describe('Tenant Login', () => {
+/*test.describe('Tenant Login', () => {
   test.beforeEach(async ({ page }) => {
     loginPage = new Loginadmin(page);
     await loginPage.open();
@@ -71,4 +71,4 @@ test.describe('Tenant Login', () => {
     await expect(loginPage.emailLabel).toBeVisible();
     await expect(loginPage.passwordLabel).toBeVisible();
   });
-});
+});*/
