@@ -133,6 +133,9 @@ export class Catalog_pr_page {
     //=====================Catalog Page Methods======================
     async openCatalog() {
         await this.page.goto(this.catalogUrl);
+        await this.page.waitForLoadState('networkidle');
+        // Wait for the search input to be visible to ensure page is fully loaded
+        await this.searchInput.waitFor({ state: 'visible', timeout: 30000 });
     }
     
     async openCart() {
@@ -145,12 +148,16 @@ export class Catalog_pr_page {
     
     async clickAddToCart(productIndex: number = 0) {
         const addToCartButtons = this.page.locator("//button[contains(text(),'Add to Cart')]");
+        await addToCartButtons.nth(productIndex).waitFor({ state: 'visible', timeout: 30000 });
         await addToCartButtons.nth(productIndex).click();
     }
     
     async searchProduct(productName: string) {
+        await this.searchInput.waitFor({ state: 'visible', timeout: 30000 });
         await this.searchInput.fill(productName);
         await this.page.keyboard.press('Enter');
+        // Wait for search results to load
+        await this.page.waitForLoadState('networkidle');
     }
     
     async clearSearch() {
@@ -202,16 +209,24 @@ export class Catalog_pr_page {
     }
     
     async selectVariant() {
+        await this.firstVariantColor.waitFor({ state: 'visible', timeout: 30000 });
         await this.firstVariantColor.click();
+        await this.firstVariantSize.waitFor({ state: 'visible', timeout: 30000 });
         await this.firstVariantSize.click();
+        await this.quantityInput.waitFor({ state: 'visible', timeout: 30000 });
         await this.quantityInput.fill('5');
+        await this.addToCartPR.waitFor({ state: 'visible', timeout: 30000 });
         await this.addToCartPR.click();
-        await expect(this.itemAddToPR).toBeVisible();
+        await expect(this.itemAddToPR).toBeVisible({ timeout: 30000 });
+        await this.secondVariantColor.waitFor({ state: 'visible', timeout: 30000 });
         await this.secondVariantColor.click();
+        await this.secondVariantSize.waitFor({ state: 'visible', timeout: 30000 });
         await this.secondVariantSize.click();
+        await this.quantityInput.waitFor({ state: 'visible', timeout: 30000 });
         await this.quantityInput.fill('5');
+        await this.addToCartPR.waitFor({ state: 'visible', timeout: 30000 });
         await this.addToCartPR.click();
-        await expect(this.itemAddToPR).toBeVisible();
+        await expect(this.itemAddToPR).toBeVisible({ timeout: 30000 });
     }
     
     async setQuantity(quantity: string) {

@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { Loginadmin } from '../pages/Tenant_signin_page';
+import { Loginadmin } from '../pages/Tenantsigninpage';
 
 let loginPage: Loginadmin;
 
@@ -60,13 +60,13 @@ test.describe('Tenant Login', () => {
   });
 
   test('SH1-652 Verify password field masks input', async () => {
-    const inputType = await loginPage.pass_admin.getAttribute('type');
+    const inputType = await loginPage.pass.getAttribute('type');
     expect(inputType).toBe('password');
   });
 
   test('SH1-651 Verify login page UI elements (labels, buttons, fields)', async () => {
-    await expect(loginPage.username_admin).toBeVisible();
-    await expect(loginPage.pass_admin).toBeVisible();
+    await expect(loginPage.username).toBeVisible();
+    await expect(loginPage.pass).toBeVisible();
     await expect(loginPage.sign_in_button).toBeVisible();
     await expect(loginPage.emailLabel).toBeVisible();
     await expect(loginPage.passwordLabel).toBeVisible();
