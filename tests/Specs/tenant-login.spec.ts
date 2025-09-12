@@ -5,6 +5,7 @@ let loginPage: Loginadmin;
 
 test.describe('Tenant Login', () => {
   test.beforeEach(async ({ page }) => {
+    test.setTimeout(19000);
     loginPage = new Loginadmin(page);
     await loginPage.open();
   });

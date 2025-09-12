@@ -7,6 +7,7 @@ let tenantLogin: Loginadmin;
 
 test.describe('View&Navigate User List', () => {
   test.beforeEach(async ({ page }) => {
+    test.setTimeout(19000);
     tenantUsers = new Tenant_Users(page);
     tenantLogin = new Loginadmin(page);
     await tenantLogin.open();

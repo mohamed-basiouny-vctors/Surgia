@@ -11,6 +11,7 @@ const parsedJsonData = JSON.parse(JSON.stringify(jsonData));
 //===================Hooks======================
 
 test.beforeEach('This actions run before every test',async ({page}, testInfo) =>{
+    test.setTimeout(19000);
     leadFormPage = new Leadformpage(page);
     await leadFormPage.open();
     console.log(`test starts for: ${testInfo.title}`);

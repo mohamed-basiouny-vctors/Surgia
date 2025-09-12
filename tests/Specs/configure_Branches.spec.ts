@@ -7,6 +7,7 @@ let adminLoginPage: AdminLoginPage;
 
 test.describe('Configure Branches - Admin Functionality', () => {
   test.beforeEach(async ({ page }) => {
+    test.setTimeout(19000);
     tenantsPage = new TenantsPage(page);
     adminLoginPage = new AdminLoginPage(page);
     await adminLoginPage.open();

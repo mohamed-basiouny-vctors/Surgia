@@ -36,7 +36,7 @@ export class Loginadmin {
     }
     // For backward compatibility
     async loginWithDefault() {
-        await this.login("new@mailna.co", "123456");
+        await this.login("new2@mailna.co", "123456");
     }
     async assertInvalidLoginMessageIsVisible() {
         await expect(this.invalidloginMessage).toBeVisible();

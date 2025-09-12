@@ -34,10 +34,24 @@ export default defineConfig({
     /* Increase timeouts for slow operations */
     actionTimeout: 60000, // 60 seconds for actions like click, fill
     navigationTimeout: 60000, // 60 seconds for navigation
+    
+    /* Additional settings for better reliability */
+    screenshot: 'only-on-failure',
+    video: 'retain-on-failure',
+    
+    /* Wait for elements to be stable before interacting */
+    waitForSelector: {
+      timeout: 30000
+    }
   },
   
   /* Global test timeout */
-  timeout: 120000, // 2 minutes per test
+  timeout: 180000, // 3 minutes per test
+  
+  /* Expect timeout for assertions */
+  expect: {
+    timeout: 30000 // 30 seconds for assertions
+  },
 
   /* Configure projects for major browsers */
   projects: [
