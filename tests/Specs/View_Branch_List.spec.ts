@@ -7,13 +7,12 @@ let tenantLogin: Loginadmin;
 
 test.describe('View Branch List - Tenant Portal', () => {
   test.beforeEach(async ({ page }) => {
-    test.setTimeout(60000);
     tenantBranches = new Tenant_Branches(page);
     tenantLogin = new Loginadmin(page);
     await tenantLogin.open();
     await tenantLogin.loginWithDefault();
     await page.getByRole('link', { name: 'Branches' }).click();
-    test.setTimeout(20000);
+    test.setTimeout(19000);
   });
 
   test('SH1-763: View Branch List - Verify branches table displays branch name, city, and contact (if set)', async ({ page }) => {
