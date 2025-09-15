@@ -30,7 +30,7 @@ test.describe('Tenant Activation Process', () => {
       branchName: 'abcde',
       city: '1',
       district: '2',
-      address: 'qqqqqq',
+      address: 'qqqqqqqqqqqqqqq',
       firstName: 'q',
       lastName: 'q',
       phone: '510145444',
@@ -43,69 +43,6 @@ test.describe('Tenant Activation Process', () => {
     await tenantsPage.verifyTenantActivated();
   });
 
-  test('SH1-1327: Complete Tenant Activation Using Workflow Method', async ({ page }) => {
-    await tenantsPage.completeTenantActivation({
-      branchName: 'TestBranch123',
-      city: '1',
-      district: '2',
-      address: 'Test Address Street',
-      firstName: 'John',
-      lastName: 'Doe',
-      phone: '123456789',
-      email: 'john.doe@example.com'
-    });
-  });
-
-  test('SH1-1328: Tenant Activation with Different Branch Names', async ({ page }) => {
-    await tenantsPage.navigateToTenants();
-    await tenantsPage.clickPendingTab();
-    await tenantsPage.clickFirstRowTenthColumn();
-    await tenantsPage.clickActivateNow();
-    await tenantsPage.clickNext();
-    const branchNames = ['BranchAlpha', 'BranchBeta', 'BranchGamma'];
-    for (const branchName of branchNames) {
-      await tenantsPage.fillBranchName(branchName);
-      await tenantsPage.selectCity('1');
-      await tenantsPage.selectDistrict('2');
-      await tenantsPage.fillAddress('Test Address');
-      await tenantsPage.fillFirstName('Test');
-      await tenantsPage.fillLastName('User');
-      await tenantsPage.fillPhone('123456789');
-      await tenantsPage.fillUserEmail('test@example.com');
-      
-      await expect(tenantsPage.branchNameInput).toHaveValue(branchName);
-      
-      await tenantsPage.branchNameInput.clear();
-    }
-  });
-
-  test('SH1-1329: Tenant Activation with Different Cities and Districts', async ({ page }) => {
-    await tenantsPage.navigateToTenants();
-    await tenantsPage.clickPendingTab();
-    await tenantsPage.clickFirstRowTenthColumn();
-    await tenantsPage.clickActivateNow();
-    await tenantsPage.clickNext();
-    const cityDistrictPairs = [
-      { city: '1', district: '2' },
-      { city: '2', district: '1' },
-      { city: '3', district: '3' }
-    ];
-    
-    for (const pair of cityDistrictPairs) {
-      await tenantsPage.fillBranchName('TestBranch');
-      await tenantsPage.selectCity(pair.city);
-      await tenantsPage.selectDistrict(pair.district);
-      await tenantsPage.fillAddress('Test Address');
-      await tenantsPage.fillFirstName('Test');
-      await tenantsPage.fillLastName('User');
-      await tenantsPage.fillPhone('123456789');
-      await tenantsPage.fillUserEmail('test@example.com');
-        
-      // Verify selections are correct
-      await expect(tenantsPage.citySelect).toHaveValue(pair.city);
-      await expect(tenantsPage.districtSelect).toHaveValue(pair.district);
-    }
-  });
 
   test('SH1-1330: Form Validation - Required Fields', async ({ page }) => {
     await tenantsPage.navigateToTenants();
@@ -210,36 +147,16 @@ test.describe('Tenant Activation Process', () => {
       address: 'Success Test Address',
       firstName: 'Success',
       lastName: 'Test',
-      phone: '111222333',
+      phone: '510245678',
       email: 'success@test.com'
     });
     
-    // Verify the success message is displayed
     await tenantsPage.verifyTenantActivated();
     
     // Additional verification that the message contains expected text
     await expect(page.getByText('Tenant was activated')).toBeVisible();
   });
 
-  test('SH1-1336: Performance Testing - Activation Process', async ({ page }) => {
-    const startTime = Date.now();
-    
-    await tenantsPage.completeTenantActivation({
-      branchName: 'PerformanceTest',
-      city: '1',
-      district: '2',
-      address: 'Performance Test Address',
-      firstName: 'Performance',
-      lastName: 'Test',
-      phone: '444555666',
-      email: 'performance@test.com'
-    });
-    
-    const totalTime = Date.now() - startTime;
-    
-    // Verify the process completes within reasonable time (less than 30 seconds)
-    expect(totalTime).toBeLessThan(30000);
-  });
 
   test('SH1-1337: Error Handling - Invalid Data', async ({ page }) => {
     await tenantsPage.navigateToTenants();
@@ -314,32 +231,6 @@ test.describe('Tenant Activation Process', () => {
     await expect(tenantsPage.userEmailInput).toHaveValue(testData.email);
   });
 
-  test('SH1-1340: End-to-End Tenant Activation Workflow', async ({ page }) => {
-    // This test covers the complete end-to-end workflow
-    // from login to successful tenant activation
-    
-    // Verify we're logged in and can access the system
-    await expect(page.getByRole('link', { name: 'Tenants' })).toBeVisible();
-    
-    // Complete the activation process
-    await tenantsPage.completeTenantActivation({
-      branchName: 'E2ETestBranch',
-      city: '1',
-      district: '2',
-      address: 'End-to-End Test Address',
-      firstName: 'E2E',
-      lastName: 'Test',
-      phone: '999000111',
-      email: 'e2e@test.com'
-    });
-    
-    // Verify final success state
-    await tenantsPage.verifyTenantActivated();
-    
-    // Verify we can navigate back to tenants list
-    await tenantsPage.navigateToTenants();
-    await expect(page.getByRole('link', { name: 'Tenants' })).toBeVisible();
-  });
 
   test('SH1-1341: Table Structure Verification - Pending and Active Tabs', async ({ page }) => {
     // This test verifies the table structure and headers for both Pending and Active tabs

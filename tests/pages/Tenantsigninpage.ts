@@ -17,7 +17,7 @@ export class Loginadmin {
         this.page = page;
         this.username = page.getByRole('textbox', { name: 'Email Address' });
         this.pass = page.getByRole('textbox', { name: 'Password' });
-        this.invalidloginMessage = page.locator("//li[@class='!bg-destructive !text-white']");
+        this.invalidloginMessage = page.locator("//span[@class='kc-feedback-text']");
         this.invalidemailMessage = page.locator("//div[contains(text(),'Invalid email address')]");
         this.emailLabel = page.getByLabel(/email/i);
         this.passwordLabel = page.getByLabel(/password/i);
