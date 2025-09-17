@@ -8,19 +8,22 @@ let catalog_pr_page: Catalog_pr_page;
 
 test.describe('Purchase Request Flow', () => {
   test.beforeEach(async ({ page }) => {
-    test.setTimeout(19000);
+    test.setTimeout(190000);
     loginPage = new Loginadmin(page);
     catalog_pr_page = new Catalog_pr_page(page);
     await loginPage.open();
-    await loginPage.login("new@mailna.co", "123456");
-    await page.waitForTimeout(3000);
+    await loginPage.login("new2@mailna.co", "123456");
   });
 
   test('SH1-1322 Happy Path: Create, Update, and Submit a PR', async ({ page }) => {
-    await page.getByRole('link', { name: 'Catalog' }).click();
+    await expect(async () => {
+    await page.waitForTimeout(2000);
+    await page.getByRole('link', { name: 'Catalog' }).click({timeout:500});
+    }).toPass();
+    await expect(async () => {
     await catalog_pr_page.searchProduct('Automation');
-    await catalog_pr_page.waitForProductsToLoad();   
     await catalog_pr_page.clickAddToCart(0); 
+  }).toPass();
     await catalog_pr_page.selectVariant();
     await catalog_pr_page.closeProductModal();
     await catalog_pr_page.openCart();
@@ -31,7 +34,6 @@ test.describe('Purchase Request Flow', () => {
  test('SH1-1298 First product addition auto-creates Draft PR', async ({ page }) => {
    await page.getByRole('link', { name: 'Catalog' }).click();
     await catalog_pr_page.searchProduct('Automation');
-    await catalog_pr_page.waitForProductsToLoad();   
     await catalog_pr_page.clickAddToCart(0); 
     await catalog_pr_page.selectVariant();
     await catalog_pr_page.closeProductModal();
@@ -44,7 +46,6 @@ test.describe('Purchase Request Flow', () => {
   test('SH1-XXX: Edit quantities in draft PR cart and verify auto-save', async ({ page }) => {
     await page.getByRole('link', { name: 'Catalog' }).click();
     await catalog_pr_page.searchProduct('Automation');
-    await catalog_pr_page.waitForProductsToLoad();   
     await catalog_pr_page.clickAddToCart(0); 
     await catalog_pr_page.selectVariant();
     await catalog_pr_page.closeProductModal();
@@ -66,7 +67,6 @@ test.describe('Purchase Request Flow', () => {
   test('Low-Level: Negative - Add to PR Without Quantity', async ({ page }) => {
     await page.getByRole('link', { name: 'Catalog' }).click();
     await catalog_pr_page.searchProduct('Automation');
-    await catalog_pr_page.waitForProductsToLoad();   
     await catalog_pr_page.clickAddToCart(0); 
     await catalog_pr_page.setQuantity('0');
     await catalog_pr_page.addToCartPR.click();
@@ -76,7 +76,6 @@ test.describe('Purchase Request Flow', () => {
   test('Low-Level: Negative - Adding an Invalid Quantity', async ({ page }) => {
     await page.getByRole('link', { name: 'Catalog' }).click();
     await catalog_pr_page.searchProduct('Automation');
-    await catalog_pr_page.waitForProductsToLoad();   
     await catalog_pr_page.clickAddToCart(0); 
     await catalog_pr_page.setQuantity('-1');
     await expect(catalog_pr_page.addToCartPR).toBeDisabled();

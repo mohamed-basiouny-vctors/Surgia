@@ -62,7 +62,7 @@ export class TenantsPage {
         this.activeTab = page.getByRole('button', { name: 'Active' });
         
         // Table Elements
-        this.firstRowTenthColumn = page.locator('td:nth-child(10)').first();
+        this.firstRowTenthColumn = page.locator('td:nth-child(9)').first();
         this.firstRowEleventhColumn = page.locator('td:nth-child(11)').first();
         this.firstRowThirdColumn = page.locator('td:nth-child(3)').first();
         

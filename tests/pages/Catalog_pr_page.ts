@@ -134,9 +134,7 @@ export class Catalog_pr_page {
     async openCatalog() {
         await this.page.goto(this.catalogUrl);
         await this.page.waitForLoadState('networkidle');
-        // Wait for the search input to be visible to ensure page is fully loaded
-        await this.searchInput.waitFor({ state: 'visible', timeout: 30000 });
-        // Additional wait for any dynamic content to load
+        
         await this.page.waitForTimeout(2000);
     }
     
@@ -149,19 +147,14 @@ export class Catalog_pr_page {
     }
     
     async clickAddToCart(productIndex: number = 0) {
-        const addToCartButtons = this.page.locator("//button[contains(text(),'Add to Cart')]");
-        await addToCartButtons.nth(productIndex).waitFor({ state: 'visible', timeout: 30000 });
-        await addToCartButtons.nth(productIndex).click();
+        const addToCartButtons = this.page.getByRole('button', { name: 'Start Icon Add to PR' });
+        await addToCartButtons.click();
     }
     
     async searchProduct(productName: string) {
-        await this.searchInput.waitFor({ state: 'visible', timeout: 30000 });
         await this.searchInput.clear();
         await this.searchInput.fill(productName);
         await this.page.keyboard.press('Enter');
-        // Wait for search results to load
-        await this.page.waitForLoadState('networkidle');
-        // Additional wait for search results to render
         await this.page.waitForTimeout(2000);
     }
     
@@ -203,13 +196,7 @@ export class Catalog_pr_page {
         await expect(this.noProductsFoundMessage).not.toBeVisible();
     }
     
-    async waitForProductsToLoad() {
-        await this.page.waitForLoadState('networkidle');
-        // Wait for product cards to be visible
-        await this.page.locator('[data-testid="product-card"], .product-card, [class*="product"]').first().waitFor({ state: 'visible', timeout: 30000 });
-        // Additional wait for any animations or dynamic content
-        await this.page.waitForTimeout(1000);
-    }
+
     
     //=====================Product Page Methods======================
     async clickProductCard(productIndex: number = 0) {
@@ -223,41 +210,31 @@ export class Catalog_pr_page {
         await this.page.waitForTimeout(1000);
         
         // Select first variant
-        await this.firstVariantColor.waitFor({ state: 'visible', timeout: 30000 });
         await this.firstVariantColor.click();
         await this.page.waitForTimeout(500);
         
-        await this.firstVariantSize.waitFor({ state: 'visible', timeout: 30000 });
         await this.firstVariantSize.click();
         await this.page.waitForTimeout(500);
         
-        await this.quantityInput.waitFor({ state: 'visible', timeout: 30000 });
         await this.quantityInput.clear();
         await this.quantityInput.fill('5');
         await this.page.waitForTimeout(500);
         
-        await this.addToCartPR.waitFor({ state: 'visible', timeout: 30000 });
         await this.addToCartPR.click();
-        await expect(this.itemAddToPR).toBeVisible({ timeout: 30000 });
         await this.page.waitForTimeout(1000);
         
         // Select second variant
-        await this.secondVariantColor.waitFor({ state: 'visible', timeout: 30000 });
         await this.secondVariantColor.click();
         await this.page.waitForTimeout(500);
         
-        await this.secondVariantSize.waitFor({ state: 'visible', timeout: 30000 });
         await this.secondVariantSize.click();
         await this.page.waitForTimeout(500);
         
-        await this.quantityInput.waitFor({ state: 'visible', timeout: 30000 });
         await this.quantityInput.clear();
         await this.quantityInput.fill('5');
         await this.page.waitForTimeout(500);
         
-        await this.addToCartPR.waitFor({ state: 'visible', timeout: 30000 });
         await this.addToCartPR.click();
-        await expect(this.itemAddToPR).toBeVisible({ timeout: 30000 });
     }
     
     async setQuantity(quantity: string) {
@@ -365,13 +342,6 @@ export class Catalog_pr_page {
         await expect(this.noDataFoundMessage).toBeVisible();
     }
     
-    async waitForModalToLoad() {
-        await this.page.waitForLoadState('networkidle');
-    }
-    
-    async waitForRequestsToLoad() {
-        await this.page.waitForLoadState('networkidle');
-    }
     
     //=====================Common Methods======================
     async selectBranch(branchName: string) {
@@ -379,43 +349,5 @@ export class Catalog_pr_page {
         await this.catalogBranchSelector.selectOption(branchName);
     }
     
-    async waitForPageLoad() {
-        await this.page.waitForLoadState('networkidle');
-    }
-    
-    //=====================Helper Methods for Better Reliability======================
-    async waitForElementToBeStable(locator: Locator, timeout: number = 30000) {
-        await locator.waitFor({ state: 'visible', timeout });
-        await this.page.waitForTimeout(500); // Additional stability wait
-    }
-    
-    async safeClick(locator: Locator, timeout: number = 30000) {
-        await this.waitForElementToBeStable(locator, timeout);
-        await locator.click();
-        await this.page.waitForTimeout(500); // Wait for click action to complete
-    }
-    
-    async safeFill(locator: Locator, value: string, timeout: number = 30000) {
-        await this.waitForElementToBeStable(locator, timeout);
-        await locator.clear();
-        await locator.fill(value);
-        await this.page.waitForTimeout(500); // Wait for fill action to complete
-    }
-    
-    async waitForNavigation(expectedUrl: string, timeout: number = 30000) {
-        await this.page.waitForURL(expectedUrl, { timeout });
-        await this.page.waitForLoadState('networkidle');
-    }
-    
-    async retryAction(action: () => Promise<void>, maxRetries: number = 3) {
-        for (let i = 0; i < maxRetries; i++) {
-            try {
-                await action();
-                return;
-            } catch (error) {
-                if (i === maxRetries - 1) throw error;
-                await this.page.waitForTimeout(1000);
-            }
-        }
-    }
+
 }

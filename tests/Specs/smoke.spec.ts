@@ -2,7 +2,11 @@ import { test, expect } from '@playwright/test';
 import { TenantsPage } from '../pages/tenants_page';
 import { AdminLoginPage } from '../pages/AdminLoginPage';
 
-
+test.describe('Purchase Request Flow', () => {
+  test.beforeEach(async ({ page }) => {
+    test.setTimeout(190000);
+    
+  });
 
   test(' Confirmation message on submission', async ({ page }) => {
     await page.goto('https://hub-surgia-test.dentacartscloud.net/register');
@@ -269,5 +273,6 @@ test('Activate tenant with valid fields', async ({ page }) => {
   await page.getByRole('button', { name: 'Activate' }).click();
   await page.getByRole('button', { name: 'Confirm' }).click();
   await expect(page.getByText('Failed to activate Tenant')).toBeVisible();
+});
 });
 

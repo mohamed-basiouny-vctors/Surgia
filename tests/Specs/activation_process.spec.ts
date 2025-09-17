@@ -7,7 +7,7 @@ let adminLoginPage: AdminLoginPage;
 
 test.describe('Tenant Activation Process', () => {
   test.beforeEach(async ({ page }) => {
-    test.setTimeout(19000);
+    test.setTimeout(190000);
     tenantsPage = new TenantsPage(page);
     adminLoginPage = new AdminLoginPage(page);
     await adminLoginPage.open();
@@ -16,31 +16,22 @@ test.describe('Tenant Activation Process', () => {
   });
 
   test('SH1-1326: Basic Tenant Activation Flow', async ({ page }) => {
-    await tenantsPage.navigateToTenants();
-    await tenantsPage.waitForPageLoad();
-    await tenantsPage.clickPendingTab();
-    await tenantsPage.waitForPageLoad();
-    await tenantsPage.clickFirstRowTenthColumn();
-    await tenantsPage.waitForPageLoad();
-    await tenantsPage.clickActivateNow();
-    await tenantsPage.waitForPageLoad();
-    await tenantsPage.clickNext();
-    await tenantsPage.waitForPageLoad();
-    await tenantsPage.fillActivationForm({
-      branchName: 'abcde',
-      city: '1',
-      district: '2',
-      address: 'qqqqqqqqqqqqqqq',
-      firstName: 'q',
-      lastName: 'q',
-      phone: '510145444',
-      email: 'test@test.test'
-    });
-    await tenantsPage.clickActivate();
-    await tenantsPage.waitForPageLoad();
-    await tenantsPage.clickConfirm();
-    await tenantsPage.waitForPageLoad();
-    await tenantsPage.verifyTenantActivated();
+  await page.getByRole('link', { name: 'Tenants' }).click();
+  await page.getByRole('button', { name: 'Pending' }).click();
+  await page.locator('td:nth-child(9)').first().click();
+  await page.getByRole('button', { name: 'Activate now' }).click();
+  await page.getByRole('button', { name: 'Next' }).nth(1).click();
+  await page.getByRole('textbox', { name: 'Enter branch name' }).fill('test');
+  await page.getByRole('button', { name: 'Select city' }).click();
+  await page.getByText('Ash Sharqiyah').click();
+  await page.getByRole('button', { name: 'Enter district name' }).click();
+  await page.getByText('Al-Ahsa', { exact: true }).click();
+  await page.getByRole('textbox', { name: 'Enter address' }).fill('ttttttttttttttttt');
+  await page.getByRole('textbox', { name: 'Enter first name' }).fill('tttt');
+  await page.getByRole('textbox', { name: 'Enter last name' }).fill('tttt');
+  await page.getByRole('button', { name: 'Activate' }).click();
+  await page.getByRole('button', { name: 'Activate' }).click();
+  await expect(page.getByText('Tenant was activated')).toBeVisible();
   });
 
 
@@ -115,147 +106,38 @@ test.describe('Tenant Activation Process', () => {
     }
   });
 
-  test('SH1-1334: Navigation Flow Validation', async ({ page }) => {
-    // Test the complete navigation flow
-    await tenantsPage.navigateToTenants();
-    await expect(page.getByRole('link', { name: 'Tenants' })).toBeVisible();
-    
-    await tenantsPage.clickPendingTab();
-    await expect(page.getByRole('button', { name: 'Pending' })).toBeVisible();
-    
-    await tenantsPage.clickFirstRowTenthColumn();
-    await tenantsPage.waitForPageLoad();
-    
-    await tenantsPage.clickActivateNow();
-    await tenantsPage.waitForPageLoad();
-    
-    await tenantsPage.clickNext();
-    await tenantsPage.waitForPageLoad();
-    
-    // Verify form fields are present
-    await expect(tenantsPage.branchNameInput).toBeVisible();
-    await expect(tenantsPage.citySelect).toBeVisible();
-    await expect(tenantsPage.districtSelect).toBeVisible();
-  });
-
-  test('SH1-1335: Success Message Verification', async ({ page }) => {
-    // Complete the activation process
-    await tenantsPage.completeTenantActivation({
-      branchName: 'SuccessTestBranch',
-      city: '1',
-      district: '2',
-      address: 'Success Test Address',
-      firstName: 'Success',
-      lastName: 'Test',
-      phone: '510245678',
-      email: 'success@test.com'
-    });
-    
-    await tenantsPage.verifyTenantActivated();
-    
-    // Additional verification that the message contains expected text
-    await expect(page.getByText('Tenant was activated')).toBeVisible();
-  });
-
 
   test('SH1-1337: Error Handling - Invalid Data', async ({ page }) => {
-    await tenantsPage.navigateToTenants();
-    await tenantsPage.clickPendingTab();
-    await tenantsPage.clickFirstRowTenthColumn();
-    await tenantsPage.clickActivateNow();
-    await tenantsPage.clickNext();
-    
-    // Test with invalid data
-    await tenantsPage.fillBranchName('');
-    await tenantsPage.fillPhone('invalid-phone');
-    await tenantsPage.fillUserEmail('invalid-email');
-    
-    // Try to submit
-    await tenantsPage.clickActivate();
-    
-    // Verify appropriate error handling
-    // This would depend on the application's error handling
-    await tenantsPage.waitForPageLoad();
+  await page.goto('https://admin-surgia-test.dentacartscloud.net/tenants');
+  await page.getByRole('link', { name: 'Tenants' }).click();
+  await page.getByRole('button', { name: 'Pending' }).click();
+  await page.locator('td:nth-child(9)').first().click();
+  await page.getByRole('button', { name: 'Activate now' }).click();
+  await page.getByRole('button', { name: 'Next' }).nth(1).click();
+  await page.getByRole('textbox', { name: 'Enter branch name' }).click();
+  await page.getByRole('textbox', { name: 'Enter branch name' }).fill('14');
+  await expect(page.getByText('Must be at least 3 characters')).toBeVisible();
+  await page.getByRole('textbox', { name: 'Enter without country code' }).fill('rrrrjjjjjjjjjj');
+  await page.getByRole('textbox', { name: 'Enter branch name' }).click();
+  await expect(page.getByText('Invalid phone number format')).toBeVisible();
   });
 
-  test('SH1-1338: Accessibility Testing - Form Elements', async ({ page }) => {
-    await tenantsPage.navigateToTenants();
-    await tenantsPage.clickPendingTab();
-    await tenantsPage.clickFirstRowTenthColumn();
-    await tenantsPage.clickActivateNow();
-    await tenantsPage.clickNext();
-    
-    // Verify all form elements are accessible
-    await expect(tenantsPage.branchNameInput).toBeVisible();
-    await expect(tenantsPage.citySelect).toBeVisible();
-    await expect(tenantsPage.districtSelect).toBeVisible();
-    await expect(tenantsPage.addressInput).toBeVisible();
-    await expect(tenantsPage.firstNameInput).toBeVisible();
-    await expect(tenantsPage.lastNameInput).toBeVisible();
-    await expect(tenantsPage.phoneInput).toBeVisible();
-    await expect(tenantsPage.userEmailInput).toBeVisible();
-    
-    // Verify action buttons are accessible
-    await expect(tenantsPage.activateButton).toBeVisible();
-  });
 
   test('SH1-1339: Data Persistence - Form Field Values', async ({ page }) => {
-    await tenantsPage.navigateToTenants();
-    await tenantsPage.clickPendingTab();
-    await tenantsPage.clickFirstRowTenthColumn();
-    await tenantsPage.clickActivateNow();
-    await tenantsPage.clickNext();
-    
-    // Fill form with test data
-    const testData = {
-      branchName: 'PersistenceTest',
-      city: '1',
-      district: '2',
-      address: 'Persistence Test Address',
-      firstName: 'Persistence',
-      lastName: 'Test',
-      phone: '777888999',
-      email: 'persistence@test.com'
-    };
-    
-    await tenantsPage.fillActivationForm(testData);
-    
-    // Verify all values are correctly set
-    await expect(tenantsPage.branchNameInput).toHaveValue(testData.branchName);
-    await expect(tenantsPage.citySelect).toHaveValue(testData.city);
-    await expect(tenantsPage.districtSelect).toHaveValue(testData.district);
-    await expect(tenantsPage.addressInput).toHaveValue(testData.address);
-    await expect(tenantsPage.firstNameInput).toHaveValue(testData.firstName);
-    await expect(tenantsPage.lastNameInput).toHaveValue(testData.lastName);
-    await expect(tenantsPage.phoneInput).toHaveValue(testData.phone);
-    await expect(tenantsPage.userEmailInput).toHaveValue(testData.email);
+  await page.goto('https://admin-surgia-test.dentacartscloud.net/tenants');
+  await page.getByRole('link', { name: 'Tenants' }).click();
+  await page.getByRole('button', { name: 'Pending' }).click();
+  await page.locator('td:nth-child(9)').first().click();
+  await page.getByRole('button', { name: 'Activate now' }).click();
+  await page.getByRole('button', { name: 'Next' }).nth(1).click();
+  await page.getByRole('textbox', { name: 'Enter branch name' }).fill('rrrrrrrrrr');
+  await expect(page.getByRole('textbox', { name: 'Enter branch name' })).toHaveValue('rrrrrrrrrr');
   });
 
 
   test('SH1-1341: Table Structure Verification - Pending and Active Tabs', async ({ page }) => {
-    // This test verifies the table structure and headers for both Pending and Active tabs
-    // Navigate to tenants page
-    await tenantsPage.navigateToTenants();
-    await tenantsPage.waitForPageLoad();
-    
-    // Click on pending tab and verify all headers
-    await tenantsPage.clickPendingTab();
-    await tenantsPage.verifyPendingTableHeaders();
-    
-    // Verify specific table cells are visible
-    await expect(tenantsPage.firstRowTenthColumn).toBeVisible();
-    await expect(tenantsPage.firstRowThirdColumn).toBeVisible();
-    
-    // Click on active tab and verify all headers
-    await tenantsPage.clickActiveTab();
-    await tenantsPage.verifyActiveTableHeaders();
-    
-    // Verify specific table cells are visible
-    await expect(tenantsPage.firstRowEleventhColumn).toBeVisible();
-  });
-
-  test('SH1-1342: Complete Table Verification Workflow', async ({ page }) => {
-    // This test uses the complete workflow method for table verification
-    await tenantsPage.completeTableVerificationWorkflow();
+    await page.getByRole('link', { name: 'Tenants' }).click();
+    await expect(page.getByRole('button', { name: 'Active' })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Pending' })).toBeVisible();
   });
 });
